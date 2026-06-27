@@ -418,7 +418,9 @@ def run_command(script_path: str, out_file: str, err_file: str, working_dir: str
     print(f"Executing script {script_path} in {working_dir}")
     os.chmod(script_path, 0o777)
     #AbaqusAgent_dir = os.getenv("WM_PROJECT_DIR")
-    command = f"abaqus job=AbaqusInput input={os.getcwd()+script_path} int"
+    abaqus_command = os.getenv("ABAQUS_COMMAND", "abaqus")
+    input_path = Path(script_path).resolve()
+    command = f'"{abaqus_command}" job=AbaqusInput input="{input_path}" int'
     timeout_seconds = config.max_time_limit
 
     with open(out_file, 'w') as out, open(err_file, 'w') as err:
